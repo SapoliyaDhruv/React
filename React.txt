@@ -1,0 +1,349 @@
+React Create project :-
+	npm create vite@latest Project-name
+
+For add other information:-
+	npm install
+
+for run the project
+	npm run dev
+
+
+hooks
+
+	1)useState
+						  let [counter,setCounter] = useState(0)
+						  // counter is variable name
+						  // setCounter is methos name
+						  const addValue = () => { 
+							counter = counter + 1
+							setCounter(counter)
+						  }
+
+	2)useCallback
+	
+						syntex:-
+								const name_of_callback =useCallback((Function),[Dependency])
+								
+						Use:-
+						
+							1)If page need to auto reload when change in the dependency so for that we can use useCallback hook.
+							2)Optimize the webpage
+							
+						Example:-
+							Here used a arrow function :=
+							
+										const passwordGenerator = useCallback(
+										() => { 
+										  let pass = ""
+										  let str = "ABCDEFGHIJKLMNOPQRSTUWXYZabcdefghijklmnopqrstuwxzy"
+										  
+										  if (numberAllowed) {
+											str += "0123456789"
+										  }
+
+										  if (charAllowed) {
+											str += "!@#$%^&*)(~`_"
+										  }
+
+										  for (let i = 1; i <= length; i++){
+											let char = Math.floor(Math.random() * str.length + 1)
+											
+											pass += str.charAt(char)
+										  }
+
+										  setPassword(pass)
+										  
+										}, [length, numberAllowed, charAllowed, setPassword])
+							
+							In this there are dependency like length,numberAllowed,charAllowed and setPassword if change in this that reload whole page.
+	
+			
+	3)useEffect
+							Use:-
+								1)when there are many renders in the project so we have to use useEffect so that control the render in webpage.
+								2)If change in the dependancy than re-render or call the function under that
+							syntex:-
+									useEffect(function,[dependancy])
+							
+							Example:-
+									  useEffect(() => { 
+										passwordGenerator()
+									  }, [length, numberAllowed, charAllowed, passwordGenerator])
+									  
+						
+	4)useRef
+							Use:-
+								when need reference of any thing that's for it is use.
+								
+							syntex:-
+								const Name_of_hook = useRef(Value)
+								
+								value can be any thing
+							
+							Example:-
+								
+								 <input
+									  type="text"
+									  value={password}
+									  className="outline-none w-full py-1 px-3"
+									  placeholder="Password"
+									  readOnly
+									  ref={passwordRef}
+								  />	
+								
+								ref={passwordRef} -> this is where useRef is used for getting reference.
+								
+								const copyPasswordButton = useCallback(() => { 
+									passwordRef.current?.select()
+									window.navigator.clipboard.writeText(password)
+								  }, [password])
+								  
+								=>in this passwordRef is used.
+								
+	5)useLoader(In routing)
+							Use:-
+								When we feching a data from something that that fatch and load data from the hower(ont on click) so 
+								that make it fast to execute.
+							
+							Example:-
+									-> writte the function that do the fatch the data and use of that :-
+										function GitHub() {
+												const data = useLoaderData()
+												return (
+													<div className='text-center m-4 bg-gray-600 text-white p-4 text-3xl'>
+														Github Folloewrs:{data.followers}
+													<img src={data.avatar_url} alt='Profile Pic' width={300}></img>
+													</div>
+												);
+										}
+
+										export default GitHub
+
+										export const githubInfoLoader = async () => {
+											const response = await fetch('https://api.github.com/users/hiteshchoudhary')
+											return response.json()
+										}
+									->Now define that with Router in the main file like:-
+										 <Route
+											loader={githubInfoLoader}
+											path='github' element={<GitHub />} />
+											  
+Props
+	-use in where one thing use multiple time in the project so for that we can use that so not want to write multiple time.
+
+						Example:-
+							in new directory create one component that use multiple time like:-
+
+							
+									function Card({ userName="Default",aboutMe,txtBtn }) { 
+										return (
+											<>
+												<div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+														<a href="#">
+														<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{userName}</h5>
+														</a>
+													<p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{aboutMe}</p>
+														<a href="#" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+														{ txtBtn}
+															<svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+																<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+															</svg>
+														</a>
+													</div>
+											</>
+										)
+									}
+										
+ 
+								=> than after in main file we can use it like
+								
+								<Card userName="Dhruv1" aboutMe="fdgfgfdgfdgggggggggbgbgbgjfiughfugh" txtBtn="click1"/>
+								<Card userName="Dhruv2" aboutMe="djghfghfgifughwfiughfwuigfjbg" txtBtn="click2"/>
+								<Card userName="Dhruv3" aboutMe="kjghadghdiughiughiuerghiruegiuerg" txtBtn="click3"/>
+								
+								
+								Hare we can use multiple userName in this so that can usable any where we want to.
+								
+
+Router:-
+		use:- 
+			For redirect from one page to other page.
+		
+		Syntext And Example:-
+				in root node write like :-
+					createRoot(document.getElementById('root')).render(
+					<StrictMode>
+							<RouterProvider router={router}/>
+					</StrictMode>,
+					)
+				
+				Define the router:-
+					Two ways to do that:-
+						1)
+							// const router = createBrowserRouter([
+						    //   {
+									//     path: '/',
+									//     element: <Layout />,
+									//     children: [
+									//       {
+									//         path: "",
+									//         element:<Home/>
+									//       },
+									//       {
+									//         path: "About",
+									//         element:<About />
+									//       },
+									//       {
+									//         path: "Contact",
+									//         element:<Contact />
+									//       },
+									//       // {
+									//       //   path: "GitHub",
+									//       //   element:< />
+									//       // }
+									//     ]
+									//   }
+							// ])
+							
+						2)
+							const router = createBrowserRouter(
+							  createRoutesFromElements(
+								<Route path='/' element={<Layout />}>
+								  <Route path='' element={<Home />} />
+								  <Route path='about' element={<About />} />
+								  <Route path='contact' element={<Contact />} />
+								  <Route path='user/:user_id' element={ <User />} />
+								  <Route
+									loader={githubInfoLoader}
+									path='github' element={<GitHub />} />
+								  
+								</Route>
+							  )
+							)
+							
+Context api:-
+				When we want to access data from one of the componet of the webpage there it is used.
+				
+				=>P:\Study\React\Contact_Api
+				
+				In this image if we want to pass the title to the "card" then we want give it to all the componet of the webpage.for over come this we 
+				need to use context api.
+				
+				Example:
+				
+				1)Provide in different file.
+				
+					1.Create Context:
+						
+						import React, { createContext } from "react";
+
+						const UserContext = createContext(null)
+
+						export default UserContext;
+						
+					2.Provide Context:
+					
+						import React, { useState } from "react";
+						import UserContext from "./UserContext";
+
+						const UserContextProvider = ({ children }) => {
+							
+							const [user,setUser] = useState(null)
+							return (
+								<UserContext.Provider value={{user,setUser}}>
+									{children}
+								</UserContext.Provider>
+							)
+						}
+
+						export default UserContextProvider;
+										
+				
+					=>Now that UserContextProvider in import here and that give data
+					
+						import { useState } from 'react'
+						import reactLogo from './assets/react.svg'
+						import viteLogo from '/vite.svg'
+						import './App.css'
+						import UserContextProvider from './context/UserContextProvider'
+						import Login from './component/Login'
+						import Profile from './component/Profile'
+						import UserContext from './context/UserContext'
+
+						function App() {
+						  const [count, setCount] = useState(0)
+
+						  return (
+							<UserContextProvider>
+							  <h1>hiiiii,Sapoliya Dhruv</h1>
+							  <Login />
+							  <Profile />
+							</UserContextProvider>
+						  )
+						}
+
+						export default App
+
+			2)Provide in single file
+			
+				=>create context and provide in same file
+				
+				import { useContext, createContext } from "react";
+
+				export const themeContext = createContext({
+					themeMode: "light",
+					darkTheme: () => { },
+					lightTheme:() => { }
+				})
+
+				export const ThemeProvider = themeContext.Provider
+
+				export default function useTheme() {
+					return useContext(themeContext)
+				}
+				
+				=>Now import it into app.js file like:-
+
+					import { useEffect, useState } from 'react'
+					import { ThemeProvider } from './context/Theme'
+					import ThemeBtn from './componet/ThemeBtn'
+					import Card from './componet/Card'
+
+					function App() {
+					  const [themeMode, setThemeMode] = useState('light')
+
+					  const lightTheme = () => {
+						setThemeMode('light')
+					  }
+
+					  const darkTheme = () => {
+						setThemeMode('dark')
+					  }
+
+					  //How theme will change
+
+					  useEffect(() => {
+						document.querySelector('html').classList.remove("light", "dark")
+						document.querySelector('html').classList.add(themeMode)
+					  },[themeMode])
+
+					  return (
+						<ThemeProvider value={{themeMode,lightTheme,darkTheme}}>
+						<div className="flex flex-wrap min-h-screen items-center">
+							<div className="w-full">
+								<div className="w-full max-w-sm mx-auto flex justify-end mb-4">
+								<ThemeBtn />
+								</div>
+
+								<div className="w-full max-w-sm mx-auto">
+								<Card />
+								</div>
+						  </div>
+						  </div>
+						</ThemeProvider>
+					  )
+					}
+
+					export default App
+
+				
